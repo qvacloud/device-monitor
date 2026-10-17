@@ -1,0 +1,16 @@
+[Unit]
+Description=device-monitor agent (self metrics API)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/dm-agent -addr :55555
+Restart=always
+RestartSec=3
+# low footprint
+Nice=10
+CPUWeight=20
+MemoryMax=64M
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>SELF · device-monitor</title>
+<style>
+  :root{--bg:#000;--grn:#39ff14;--dim:#0e3d0e;--mid:#1f8a1f;--warn:#d7ff00;--bad:#ff2b2b}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--grn);font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:10px}
+  .hd{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--dim);padding-bottom:6px;margin-bottom:8px}
+  .hd b{font-size:14px;letter-spacing:1px}
+  .hd .m{margin-left:auto;color:var(--mid)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--grn);box-shadow:0 0 6px var(--grn)}
+  .dot.bad{background:var(--bad);box-shadow:0 0 6px var(--bad)}
+  .sec{display:flex;justify-content:space-between;margin:8px 0 2px}
+  .k{color:var(--mid)}
+  .v{color:var(--grn)}
+  .track{height:3px;background:var(--dim);border-radius:2px;overflow:hidden}
+  .track>i{display:block;height:100%;background:var(--grn);transition:width .5s}
+  .track.w>i{background:var(--warn)}.track.b>i{background:var(--bad)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .chip{border:1px solid var(--dim);border-radius:3px;padding:2px 6px;color:var(--mid)}
+  .chip b{color:var(--grn)}
+  .chip.w{border-color:var(--warn)}.chip.w b{color:var(--warn)}
+  .chip.b{border-color:var(--bad)}.chip.b b{color:var(--bad)}
+  .disk{margin-top:6px}
+  .err{color:var(--bad)}
+</style>
+</head>
+<body>
+<div class="hd"><span class="dot" id="dot"></span><b id="hn">…</b><span class="m" id="meta"></span></div>
+<div id="body"><span class="k">contactando…</span></div>
+<script>
+const g=id=>document.getElementById(id);
+const b=b=>{if(b==null)return'—';const u=['B','K','M','G','T'];let i=0,v=b;while(v>=1024&&i<4){v/=1024;i++}return(v>=100||i===0?v.toFixed(0):v.toFixed(1))+u[i]};
+const up=s=>{if(!s)return'—';const d=(s/86400)|0,h=((s%86400)/3600)|0,m=((s%3600)/60)|0;return d?d+'d '+h+'h':h?h+'h '+m+'m':m+'m'};
+const cl=p=>p>=85?'b':p>=60?'w':'';
+const row=(k,v,p,extra)=>`<div class="sec"><span class="k">${k}</span><span class="v">${v}</span></div><div class="track ${cl(p)}"><i style="width:${Math.min(p,100)}%"></i></div>${extra?'<div class="k">'+extra+'</div>':''}`;
+async function tick(){
+  try{
+    const m=await (await fetch('/metrics',{cache:'no-store'})).json();
+    g('dot').className='dot';
+    g('hn').textContent=m.hostname;
+    g('meta').textContent=m.os+'/'+m.arch+' · '+m.cpu.cores+'c · up '+up(m.uptime_s);
+    const temps=m.temps.map(t=>`<span class="chip ${t.celsius>=80?'b':t.celsius>=65?'w':''}">${t.label} <b>${t.celsius.toFixed(1)}°</b></span>`).join('')||'<span class="chip">sin sensores</span>';
+    const disks=m.disks.map(d=>`<div class="disk">${row(d.mount+(d.fs?' <span class="k">'+d.fs+'</span>':''), b(d.used)+'/'+b(d.total)+' '+d.used_percent.toFixed(0)+'%', d.used_percent)}</div>`).join('');
+    g('body').innerHTML=
+      row('CPU', m.cpu.usage_percent.toFixed(1)+'%', m.cpu.usage_percent, m.cpu.model+' · load '+m.cpu.load1.toFixed(2))+
+      row('RAM', b(m.mem.used)+'/'+b(m.mem.total)+' '+m.mem.used_percent.toFixed(0)+'%', m.mem.used_percent)+
+      row('SWAP', b(m.swap.used)+'/'+b(m.swap.total), m.swap.used_percent)+
+      '<div class="chips">'+temps+'</div>'+disks;
+  }catch(e){g('dot').className='dot bad';g('body').innerHTML='<span class="err">sin datos · '+e+'</span>';}
+}
+tick();setInterval(tick,3000);
+</script>
+</body>
+</html>

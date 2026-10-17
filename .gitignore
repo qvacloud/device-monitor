@@ -1,0 +1,15 @@
+# Build & run outputs
+/dist/
+/android/build/
+*.apk
+*.exe
+
+# Signing material (never publish keystores)
+/android/debug.keystore
+*.keystore
+*.jks
+
+# Editor / OS noise
+.DS_Store
+*.swp
+*.log
