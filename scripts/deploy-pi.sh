@@ -8,7 +8,7 @@ ARCH="${ARCH:-arm64}"
 USER="${USER_NAME:-root}"
 : "${PI_PASS:?export PI_PASS with the ssh password}"
 
-BIN="$ROOT/dist/dm-agent-$ARCH"
+BIN="$ROOT/dist/dm-agent-linux-$ARCH"
 UNIT="$ROOT/scripts/dm-agent.service"
 [ -f "$BIN" ] || { echo "missing $BIN (run: make cross)"; exit 1; }
 

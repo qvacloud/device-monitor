@@ -19,9 +19,9 @@ agent:
 	$(GO) build -ldflags "$(LDFLAGS)" -o $(DIST)/dm-agent ./agent
 
 cross:
-	GOOS=linux GOARCH=amd64       $(BFLAGS) -o $(DIST)/dm-agent-amd64   ./agent
-	GOOS=linux GOARCH=arm64       $(BFLAGS) -o $(DIST)/dm-agent-arm64   ./agent
-	GOOS=linux GOARCH=arm GOARM=7 $(BFLAGS) -o $(DIST)/dm-agent-arm7    ./agent
+	GOOS=linux GOARCH=amd64       $(BFLAGS) -o $(DIST)/dm-agent-linux-amd64 ./agent
+	GOOS=linux GOARCH=arm64       $(BFLAGS) -o $(DIST)/dm-agent-linux-arm64 ./agent
+	GOOS=linux GOARCH=arm GOARM=7 $(BFLAGS) -o $(DIST)/dm-agent-linux-arm7  ./agent
 
 windows:
 	GOOS=windows GOARCH=amd64 $(BFLAGS) -o $(DIST)/dm-agent-windows-amd64.exe ./agent

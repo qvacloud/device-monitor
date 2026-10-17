@@ -71,8 +71,8 @@ Copia el binario a `/usr/local/bin/dm-agent`, instala el unit
 ### Prueba rápida (cualquier SO)
 
 ```bash
-./dist/dm-agent-arm64 -addr :55555              # o -token SECRETO
-DISK_MOUNTS="/,/home" ./dist/dm-agent-amd64     # limitar discos monitorizados
+./dist/dm-agent-linux-arm64 -addr :55555          # o -token SECRETO
+DISK_MOUNTS="/,/home" ./dist/dm-agent-linux-amd64 # limitar discos monitorizados
 curl http://IP:55555/health
 ```
 
