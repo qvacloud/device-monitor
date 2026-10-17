@@ -1,4 +1,4 @@
-package com.sigma.devmon;
+package com.qvacloud.devmon;
 
 import android.app.Activity;
 import android.app.AlertDialog;

@@ -20,7 +20,7 @@ for t in "$AAPT2" "$D8" "$ZIPALIGN" "$APKSIGNER" "$PLATFORM"; do
 done
 
 APPNAME="devmon"
-PKG="com.sigma.devmon"
+PKG="com.qvacloud.devmon"
 AND="$ROOT/android"
 BUILD="$AND/build"
 OUT="$ROOT/dist"

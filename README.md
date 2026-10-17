@@ -112,7 +112,7 @@ Instalar en el móvil conectado por ADB:
 
 ```bash
 adb install -r dist/devmon.apk
-adb shell am start -n com.sigma.devmon/.MainActivity
+adb shell am start -n com.qvacloud.devmon/.MainActivity
 ```
 
 ## Notas por plataforma
